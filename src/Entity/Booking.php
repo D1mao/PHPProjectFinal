@@ -14,30 +14,30 @@ class Booking
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups('return')]
+    #[Groups(['return', 'return_for_room'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups('return')]
+    #[Groups(['return', 'return_for_room'])]
     private ?\DateTimeImmutable $startAt = null;
 
     #[ORM\Column]
-    #[Groups('return')]
+    #[Groups(['return', 'return_for_room'])]
     private ?\DateTimeImmutable $endAt = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('return')]
+    #[Groups(['return', 'return_for_room'])]
     private ?string $status = null;
 
     #[ORM\ManyToOne]
-    #[Groups('return')]
+    #[Groups(['return', 'return_for_room'])]
     private ?User $createdBy = null;
 
     /**
      * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'bookings')]
-    #[Groups('return')]
+    #[Groups(['return', 'return_for_room'])]
     private Collection $participants;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]

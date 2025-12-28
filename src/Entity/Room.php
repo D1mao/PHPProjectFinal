@@ -14,28 +14,30 @@ class Room
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['return', 'return+'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('return')]
+    #[Groups(['return', 'return+'])]
     private ?string $name = null;
 
     #[ORM\Column]
-    #[Groups('return')]
+    #[Groups(['return', 'return+'])]
     private ?int $capacity = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('return')]
+    #[Groups(['return', 'return+'])]
     private ?string $location = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('return')]
+    #[Groups(['return', 'return+'])]
     private ?string $description = null;
 
     /**
      * @var Collection<int, Booking>
      */
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'room')]
+    #[Groups(['return+'])]
     private Collection $bookings;
 
     public function __construct()

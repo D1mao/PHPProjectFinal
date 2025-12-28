@@ -1,17 +1,41 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Meeting Rooms{% endblock %}</title>
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+  <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a class="brand" href="/app">
+        <div class="brand-badge"></div>
+        <div class="brand-title">Meeting Rooms</div>
+      </a>
+
+      <nav class="nav">
+        <a href="/app">Главная</a>
+        <a id="admin-link" href="/admin/users" style="display:none;">Админка</a>
+      </nav>
+
+      <div class="userbox">
+        <span class="userpill" id="auth-email"></span>
+        <button class="btn btn-ghost" id="btn-logout" style="display:none;" type="button">Выйти</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="boot-screen" class="card">Загрузка...</div>
+
+    <div id="app-root" style="display:none;">
+      <div id="flash" class="flash"></div>
+      {% block body %}{% endblock %}
+    </div>
+  </main>
+
+  {{ importmap('app') }}
+</body>
 </html>

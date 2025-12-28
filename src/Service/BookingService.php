@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Dto\BookingRequest;
 use App\Entity\Booking;
 use App\Entity\User;
+use App\Entity\Room;
 use App\Repository\BookingRepository;
 use App\Repository\RoomRepository;
 use DateTimeImmutable;
@@ -60,27 +61,28 @@ class BookingService
             return false;
         }
 
+        $roomBookings = $this->getAllActiveForRoom($booking->getRoom());
+        
+        $newStart = new DateTimeImmutable($data['startAt']);
+        $newEnd = new DateTimeImmutable($data['endAt']);
+
         $wasUpdated = false;
 
-        if (isset($data['startAt']) && (new DateTimeImmutable($data['startAt'])) instanceof \DateTimeImmutable) {
-            foreach ($booking->getRoom()->getBookings() as $booking) {
-                if ($data['startAt'] < $booking->getEndAt()) {
-                    throw new Exception('Переговорная уже занята на это время');
+        if ($newStart !== $booking->getStartAt() || $newEnd !== $booking->getEndAt()) {
+            foreach ($roomBookings as $roomBooking) {
+                if ($roomBooking->getId() === $booking->getId()) continue;
+
+                if ($newStart < $roomBooking->getEndAt() && $newEnd > $roomBooking->getSatrtAt()) {
+                    throw new Exception("Переговорная уже занята на это время");
                 }
             }
             
-            $booking->setStartAt($data['startAt']);
-            $wasUpdated = true;
-        }
-
-        if (isset($data['endAt']) && (new DateTimeImmutable($data['endAt'])) instanceof \DateTimeImmutable) {
-            foreach ($booking->getRoom()->getBookings() as $booking) {
-                if ($data['endAt'] > $booking->getStartAt()) {
-                    throw new Exception('Переговорная уже занята на это время');
-                }
+            if ($newStart !== $booking->getStartAt()) {
+                $booking->setStartAt($newStart);
             }
-
-            $booking->setEndAt($data['endAt']);
+            if ($newEnd !== $booking->getEndAt()) {
+                $booking->setEndAt($newEnd);
+            }
             $wasUpdated = true;
         }
 
@@ -141,6 +143,11 @@ class BookingService
     public function getBookingById(int $id): ?Booking
     {
         return $this->bookingRepository->findOneBy(['id' => $id, 'status' => 'active']);
+    }
+
+    public function getAllActiveForRoom(Room $room): array
+    {
+        return $this->bookingRepository->findAllActiveForRoom($room);
     }
 
     public function archiveOldBookings(): int

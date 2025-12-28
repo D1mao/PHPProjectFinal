@@ -2,17 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Room;
-use App\Repository\RoomRepository;
 use App\Service\RoomService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-#[Route('/rooms')]
+#[Route('/api/rooms')]
 class RoomController extends AbstractController
 {
     #[Route('', methods: ['GET'])]
@@ -34,7 +30,7 @@ class RoomController extends AbstractController
             return $this->json(['error' => 'Переговорная не найдена'], 404);
         }
 
-        $data = $serializer->serialize($room, 'json', ['groups' => 'return']);
+        $data = $serializer->serialize($room, 'json', ['groups' => ['return+', 'return_for_room']]);
 
         return $this->json(json_decode($data));
     }

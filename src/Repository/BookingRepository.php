@@ -6,6 +6,7 @@ use App\Entity\Booking;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\User;
+use App\Entity\Room;
 use App\Enum\BookingStatusEnum;
 
 /**
@@ -32,8 +33,22 @@ class BookingRepository extends ServiceEntityRepository
     public function findAllActive(): array
     {
         return $this->createQueryBuilder('b')
-            ->where('b.status != :archived')
+            ->Where('b.status != :archived AND b.status != :cancelled')
             ->setParameter('archived', BookingStatusEnum::ARCHIVED->value)
+            ->setParameter('cancelled', BookingStatusEnum::CANCELLED->value)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllActiveForRoom(Room $room): array
+    {
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.room', 'r')
+            ->Where('b.status != :archived AND b.status != :cancelled')
+            ->andWhere('r.id = :room')
+            ->setParameter('archived', BookingStatusEnum::ARCHIVED->value)
+            ->setParameter('cancelled', BookingStatusEnum::CANCELLED->value)
+            ->setParameter('room', $room)
             ->getQuery()
             ->getResult();
     }
@@ -65,9 +80,10 @@ class BookingRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('b')
             ->where('b.endAt < :threshold')
-            ->andWhere('b.status = :active')
+            ->andWhere('b.status = :active OR b.status = :cancelled')
             ->setParameter('threshold', $thresholdDate)
             ->setParameter('active', BookingStatusEnum::ACTIVE->value)
+            ->setParameter('cancelled', BookingStatusEnum::CANCELLED->value)
             ->getQuery()
             ->getResult();
     }

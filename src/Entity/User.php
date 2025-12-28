@@ -17,7 +17,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups('return')]
+    #[Groups(['return', 'return_for_room', 'return_for_booking'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
@@ -38,7 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('return')]
+    #[Groups(['return', 'return_for_room', 'return_for_booking'])]
     private ?string $fullName = null;
 
     /**

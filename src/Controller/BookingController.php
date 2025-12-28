@@ -3,11 +3,9 @@
 namespace App\Controller;
 
 use App\Dto\BookingRequest;
-use App\Entity\Booking;
 use App\Entity\User;
 use App\Service\BookingService;
 use App\Service\RoomService;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +50,9 @@ class BookingController extends AbstractController
             return $this->json(['error' => 'Неправильное время'], 400);
         }
 
-        foreach ($room->getBookings() as $booking) {
+        $roomBookings = $bookingService->getAllActiveForRoom($room);
+
+        foreach ($roomBookings as $booking) {
             if (
                 ($dto->startAt < $booking->getEndAt() && $dto->endAt > $booking->getStartAt())
             ) {
@@ -101,7 +101,7 @@ class BookingController extends AbstractController
         return $this->json(['status' => 'updated']);
     }
 
-    #[Route('/{id}', methods: ['DELETE'])]
+    #[Route('/cancel/{id}', methods: ['DELETE'])]
     public function cancel(int $id, BookingService $bookingService, #[CurrentUser] User $user): JsonResponse
     {
         $booking = $bookingService->getBookingById($id);

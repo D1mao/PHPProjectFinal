@@ -63,9 +63,9 @@ class UserService
         return $this->userRepository->findByEmail($email);
     }
 
-    public function getAllUsers(): array
+    public function getAllUsers(?User $user = null): array
     {
-        return $this->userRepository->findAllUsers();
+        return $this->userRepository->findAllUsers($user);
     }
 
     public function deleteUser(int $userId): bool
