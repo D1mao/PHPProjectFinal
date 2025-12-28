@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Подтверждение бронирования</title>
+</head>
+<body>
+    <h2>Ваше бронирование подтверждено</h2>
+    
+    <p><strong>Комната:</strong> {{ room.name }}</p>
+    <p><strong>Местоположение:</strong> {{ room.location }}</p>
+    <p><strong>Дата и время начала:</strong> {{ booking.startAt|date('d.m.Y H:i') }}</p>
+    <p><strong>Дата и время окончания:</strong> {{ booking.endAt|date('d.m.Y H:i') }}</p>
+    
+    {% if participants|length > 0 %}
+    <p><strong>Участники:</strong></p>
+    <ul>
+        {% for participant in participants %}
+            <li>{{ participant.fullName }} ({{ participant.email }})</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    
+    <p>С уважением,<br>Система бронирования</p>
+</body>
+</html>

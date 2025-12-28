@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.mailer.from: 'grinlight25@gmail.com'
 
 services:
     # default configuration for services in *this* file
@@ -22,3 +23,32 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Service\UserService:
+        arguments:
+            $userRepository: '@App\Repository\UserRepository'
+            $passwordHasher: '@security.user_password_hasher'
+            $logger: '@monolog.logger.booking_app'
+
+    App\Service\RoomService:
+        arguments:
+            $roomRepository: '@App\Repository\RoomRepository'
+            $logger: '@monolog.logger.booking_app'
+
+    App\Service\BookingService:
+        arguments:
+            $bookingRepository: '@App\Repository\BookingRepository'
+            $roomRepository: '@App\Repository\RoomRepository'
+            $logger: '@monolog.logger.booking_app'
+
+    App\Command\ArchiveOldBookingsCommand:
+        arguments:
+            $bookingService: '@App\Service\BookingService'
+            $logger: '@monolog.logger.booking_archive'
+        tags: [ 'console.command' ]
+
+    App\Service\BookingNotificationService:
+        arguments:
+            $mailer: '@mailer'
+            $logger: '@monolog.logger.booking_app'
+            $fromEmail: '%app.mailer.from%'

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Отмена бронирования</title>
+</head>
+<body>
+    <h2>Бронирование отменено</h2>
+    
+    <p>Следующее бронирование было отменено:</p>
+    
+    <p><strong>Комната:</strong> {{ room.name }}</p>
+    <p><strong>Местоположение:</strong> {{ room.location }}</p>
+    <p><strong>Дата и время начала:</strong> {{ booking.startAt|date('d.m.Y H:i') }}</p>
+    <p><strong>Дата и время окончания:</strong> {{ booking.endAt|date('d.m.Y H:i') }}</p>
+    
+    <p>С уважением,<br>Система бронирования</p>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Изменение бронирования</title>
+</head>
+<body>
+    <h2>Бронирование изменено</h2>
+    
+    <p>Бронирование было изменено. Актуальная информация:</p>
+    
+    <p><strong>Комната:</strong> {{ room.name }}</p>
+    <p><strong>Местоположение:</strong> {{ room.location }}</p>
+    <p><strong>Дата и время начала:</strong> {{ booking.startAt|date('d.m.Y H:i') }}</p>
+    <p><strong>Дата и время окончания:</strong> {{ booking.endAt|date('d.m.Y H:i') }}</p>
+    
+    {% if participants|length > 0 %}
+    <p><strong>Участники:</strong></p>
+    <ul>
+        {% for participant in participants %}
+            <li>{{ participant.fullName }} ({{ participant.email }})</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    
+    <p>С уважением,<br>Система бронирования</p>
+</body>
+</html>
