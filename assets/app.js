@@ -65,7 +65,7 @@ function setupForms() {
       const fd = new FormData(registerForm);
       try {
         await register(fd.get('fullName'), fd.get('email'), fd.get('password'));
-        location.replace('/app'); // токен приходит сразу
+        location.replace('/app');
       } catch (err) {
         showFlash(err?.message || 'Ошибка регистрации', true);
       }
@@ -910,11 +910,11 @@ function showFlash(message, isError = false) {
 
 function formatIso(iso) {
   if (!iso) return '';
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  const pad = (n) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return iso
+    .replace('T', ' ')
+    .replace(/:\d{2}\+.*$/, '');
 }
+
 
 function escapeHtml(s) {
   return String(s)
